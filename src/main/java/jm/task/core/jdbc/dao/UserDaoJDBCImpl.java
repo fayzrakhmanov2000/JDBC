@@ -18,51 +18,73 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
 
     @Override
     public void createUsersTable() throws SQLException {
-        String sql = "CREATE TABLE IF NOT EXISTS " + TABLE + " ("
-                + "id BIGINT PRIMARY KEY AUTO_INCREMENT, "
-                + "name VARCHAR(255), "
-                + "lastName VARCHAR(255), "
-                + "age TINYINT"
-                + ")";
-        try (Statement stmt = connection.createStatement()) {
+        try {
+            StringBuilder builder = new StringBuilder();
+            builder.append("CREATE TABLE IF NOT EXISTS ");
+            builder.append(TABLE);
+            builder.append(" (");
+            builder.append("id BIGINT PRIMARY KEY AUTO_INCREMENT, ");
+            builder.append("name VARCHAR(255), ");
+            builder.append("lastName VARCHAR(255), ");
+            builder.append("age TINYINT");
+            builder.append(")");
+            String sql = builder.toString();
+
+            Statement stmt = connection.createStatement();
             stmt.executeUpdate(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+
     }
 
     @Override
     public void dropUsersTable() throws SQLException {
-        String sql = "DROP TABLE IF EXISTS " + TABLE;
-        try (Statement stmt = connection.createStatement()) {
+        try {
+            String sql = "DROP TABLE IF EXISTS " + TABLE;
+            Statement stmt = connection.createStatement();
             stmt.executeUpdate(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) throws SQLException {
-        String sql = "INSERT INTO " + TABLE + " (name, lastName, age) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try {
+            String sql = "INSERT INTO " + TABLE + " (name, lastName, age) VALUES (?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, name);
             ps.setString(2, lastName);
             ps.setByte(3, age);
             ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+
     }
 
     @Override
     public void removeUserById(long id) throws SQLException {
-        String sql = "DELETE FROM " + TABLE + " WHERE id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try {
+            String sql = "DELETE FROM " + TABLE + " WHERE id = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, id);
             ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+
     }
 
     @Override
     public List<User> getAllUsers() throws SQLException {
         String sql = "SELECT id, name, lastName, age FROM " + TABLE;
         List<User> users = new ArrayList<>();
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 User u = new User();
                 u.setId(rs.getLong("id"));
@@ -71,16 +93,23 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
                 u.setAge(rs.getByte("age"));
                 users.add(u);
             }
+
+            return users;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        return users;
     }
 
     @Override
     public void cleanUsersTable() throws SQLException {
-        // Если вдруг нет прав на TRUNCATE — можно заменить на: "DELETE FROM " + TABLE
-        String sql = "TRUNCATE TABLE " + TABLE;
-        try (Statement stmt = connection.createStatement()) {
+
+        try {
+            String sql = "TRUNCATE TABLE " + TABLE;
+            Statement stmt = connection.createStatement();
             stmt.executeUpdate(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+
     }
 }

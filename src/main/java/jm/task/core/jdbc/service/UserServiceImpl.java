@@ -8,28 +8,53 @@ import java.util.List;
 
 public class UserServiceImpl implements UserService {
     UserDaoJDBCImpl userDaoJDBCImpl = new UserDaoJDBCImpl();
-    public void createUsersTable() throws SQLException {
-        userDaoJDBCImpl.createUsersTable();
+    @Override
+    public void createUsersTable() {
+        try {
+            userDaoJDBCImpl.createUsersTable();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-
-    public void dropUsersTable() throws SQLException {
-        userDaoJDBCImpl.dropUsersTable();
+    @Override
+    public void dropUsersTable() {
+        try {
+            userDaoJDBCImpl.dropUsersTable();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-
-    public void saveUser(String name, String lastName, byte age) throws SQLException {
-        userDaoJDBCImpl.saveUser(name, lastName, age);
+    @Override
+    public void saveUser(String name, String lastName, byte age) {
+        try {
+            userDaoJDBCImpl.saveUser(name, lastName, age);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-
-    public void removeUserById(long id) throws SQLException {
-        userDaoJDBCImpl.removeUserById(id);
+    @Override
+    public void removeUserById(long id) {
+        try {
+            userDaoJDBCImpl.removeUserById(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+    @Override
+    public List<User> getAllUsers() {
 
-    public List<User> getAllUsers() throws SQLException {
-
-        return userDaoJDBCImpl.getAllUsers();
+        try {
+            return userDaoJDBCImpl.getAllUsers();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-
-    public void cleanUsersTable() throws SQLException {
-        userDaoJDBCImpl.cleanUsersTable();
+    @Override
+    public void cleanUsersTable() {
+        try {
+            userDaoJDBCImpl.cleanUsersTable();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
