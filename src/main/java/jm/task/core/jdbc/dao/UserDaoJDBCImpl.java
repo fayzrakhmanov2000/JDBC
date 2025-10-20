@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl extends Util implements UserDao {
-    // Таблица newschema в схеме ildaf
-    // (безопасно экранировано бэктиками на случай «неудачных» имён)
+
     private static final String TABLE = "`ildaf`.`newschema`";
 
     private final Connection connection = getConnection();
@@ -17,7 +16,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
     public UserDaoJDBCImpl() { }
 
     @Override
-    public void createUsersTable() throws SQLException {
+    public void createUsersTable()  {
         try {
             StringBuilder builder = new StringBuilder();
             builder.append("CREATE TABLE IF NOT EXISTS ");
@@ -39,7 +38,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
     }
 
     @Override
-    public void dropUsersTable() throws SQLException {
+    public void dropUsersTable() {
         try {
             String sql = "DROP TABLE IF EXISTS " + TABLE;
             Statement stmt = connection.createStatement();
@@ -51,7 +50,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
     }
 
     @Override
-    public void saveUser(String name, String lastName, byte age) throws SQLException {
+    public void saveUser(String name, String lastName, byte age) {
         try {
             String sql = "INSERT INTO " + TABLE + " (name, lastName, age) VALUES (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -66,7 +65,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
     }
 
     @Override
-    public void removeUserById(long id) throws SQLException {
+    public void removeUserById(long id) {
         try {
             String sql = "DELETE FROM " + TABLE + " WHERE id = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -79,7 +78,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
     }
 
     @Override
-    public List<User> getAllUsers() throws SQLException {
+    public List<User> getAllUsers() {
         String sql = "SELECT id, name, lastName, age FROM " + TABLE;
         List<User> users = new ArrayList<>();
         try {
@@ -101,7 +100,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
     }
 
     @Override
-    public void cleanUsersTable() throws SQLException {
+    public void cleanUsersTable() {
 
         try {
             String sql = "TRUNCATE TABLE " + TABLE;
